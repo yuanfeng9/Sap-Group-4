@@ -1,0 +1,103 @@
+# EcoCity 2050 - Future City Pollution Controller
+# Python 2050 - Code the Future | FCT0015 Group Project
+
+zones = ["Downtown", "Industrial",
+         "Residential", "Harbour"]
+records = []  # tuples: (zone, pm25, co2, noise, index)
+
+
+def get_number(prompt):
+    """Ask until the user enters a valid number."""
+    while True:
+        try:
+            value = float(input(prompt))
+            if value >= 0:
+                return value
+            print("  Value cannot be negative.")
+        except ValueError:
+            print("  Please enter a number.")
+
+
+def calculate_index(pm25, co2, noise):
+    """Weighted index: PM2.5 50%, CO2 30%, noise 20%."""
+    return ((pm25 / 100 * 50)
+            + (co2 / 1000 * 30)
+            + (noise / 100 * 20))
+
+
+def classify(index):
+    """Return (risk level, action) for an index."""
+    if index < 30:
+        return "SAFE", "No action needed."
+    elif index < 60:
+        return ("MODERATE",
+                "Limit heavy traffic. "
+                "Purifier towers at 50%.")
+    elif index < 90:
+        return ("HIGH",
+                "Ban combustion vehicles. "
+                "Purifier towers at 100%.")
+    else:
+        return ("CRITICAL",
+                "City alert! Shut down factories. "
+                "Protect residents.")
+
+
+def enter_readings():
+    records.clear()
+    for zone in zones:
+        print(f"\n--- {zone} ---")
+        pm25 = get_number("PM2.5 (ug/m3): ")
+        co2 = get_number("CO2 (ppm): ")
+        noise = get_number("Noise (dB): ")
+        index = calculate_index(pm25, co2, noise)
+        records.append((zone, pm25, co2, noise, index))
+    print("\nReadings saved.")
+
+
+def show_report():
+    if not records:
+        print("\nNo readings yet. Choose 1 first.")
+        return
+    print("\n===== ECOCITY 2050 POLLUTION REPORT =====")
+    for zone, pm25, co2, noise, index in records:
+        level, action = classify(index)
+        print(f"{zone:<12} Index: {index:6.1f} | "
+              f"{level:<8} | {action}")
+
+
+def find_worst_zone():
+    if not records:
+        print("\nNo readings yet. Choose 1 first.")
+        return
+    worst = records[0]
+    for rec in records:
+        if rec[4] > worst[4]:
+            worst = rec
+    print(f"\nPriority zone: {worst[0]} "
+          f"(Index {worst[4]:.1f})")
+
+
+def main():
+    print("Welcome to EcoCity 2050: "
+          "Future City Pollution Controller")
+    while True:
+        print("\n1. Enter zone readings")
+        print("2. View pollution report")
+        print("3. Find priority zone")
+        print("4. Exit")
+        choice = input("Choose (1-4): ")
+        if choice == "1":
+            enter_readings()
+        elif choice == "2":
+            show_report()
+        elif choice == "3":
+            find_worst_zone()
+        elif choice == "4":
+            print("Stay safe. Keep the city clean!")
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+
+main()
