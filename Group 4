@@ -6,17 +6,19 @@ zones = ["Downtown", "Industrial",
 records = []  # tuples: (zone, pm25, co2, noise, index)
 
 
-def get_number(prompt):
-    """Ask until the user enters a valid number."""
+def get_number(prompt, max_value=None):
+    """Ask until the user enters a valid number within range."""
     while True:
         try:
             value = float(input(prompt))
             if value >= 0:
+                if max_value is not None and value > max_value:
+                    print(f"  Value seems too high (max allowed: {max_value}).")
+                    continue
                 return value
             print("  Value cannot be negative.")
         except ValueError:
             print("  Please enter a number.")
-
 
 def calculate_index(pm25, co2, noise):
     """Weighted index: PM2.5 50%, CO2 30%, noise 20%."""
