@@ -1,0 +1,29 @@
+def classify(index):
+    """Return (risk level, action) for an index."""
+    if index < 30:
+        return "SAFE", "No action needed."
+    elif index < 60:
+        return ("MODERATE",
+                "Limit heavy traffic. "
+                "Purifier towers at 50%.")
+    elif index < 90:
+        return ("HIGH",
+                "Ban combustion vehicles. "
+                "Purifier towers at 100%.")
+    else:
+        return ("CRITICAL",
+                "City alert! Shut down factories. "
+                "Protect residents.")
+
+
+def enter_readings():
+    records.clear()
+    for zone in zones:
+        print(f"\n--- {zone} ---")
+        pm25 = get_number("PM2.5 (ug/m3): ")
+        co2 = get_number("CO2 (ppm): ")
+        noise = get_number("Noise (dB): ")
+        index = calculate_index(pm25, co2, noise)
+        records.append((zone, pm25, co2, noise, index))
+
+    print("\nReadings saved.")
