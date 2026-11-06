@@ -1,0 +1,20 @@
+def show_report():
+   if not records:
+      print("\nNo readings yet. Choose 1 first.")
+      return
+   print("\n==== ECOCITY 2050 POLLUTION REPORT ====")
+   for zone, pm25, co2, noise, index in records:
+      level, action = classify(index)
+      print(f"{zone:<12} Index: {index:6.1f} | "
+            f"{level:<8}  |  {action}")
+
+def worst_zone():
+   if not records:
+      print("\nNo readings yet. Choose 1 furst.")
+      return
+   worst = records[0]
+   for rec in records:
+      if rec [4] > worst [4]:
+         worst = rec
+   print(f"\nPriority zone: {worst[0]} "
+         f"(Index {worst[4]:.1f})")
